@@ -2,137 +2,106 @@ from tkinter import *
 from tkinter import messagebox
 import sqlite3 as sql
 
-def add_task():
-    task_string = task_field.get()
-    if len(task_string) == 0:
-        messagebox.showinfo('Error', 'Field is Empty.')
-    else:
-        tasks.append(task_string)
-        the_cursor.execute('insert into tasks values (?)', (task_string,))
-        list_update()
-        task_field.delete(0, 'end')
+class TodoApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("To-Do List")
+        self.master.geometry("665x400+550+250")
+        self.master.resizable(0, 0)
+        self.master.configure(bg="#2E2E2E")
 
-def list_update():
-    clear_list()
-    for task in tasks:
-        task_listbox.insert('end', task)
+        self.tasks = []
 
-def delete_task():
-    try:
-        the_value = task_listbox.get(task_listbox.curselection())
-        if the_value in tasks:
-            tasks.remove(the_value)
-            list_update()
-            the_cursor.execute('delete from tasks where title = ?', (the_value,))
-    except:
-        messagebox.showinfo('Error', 'No Task Selected. Cannot Delete.')
+        # Connect to the database
+        self.connection = sql.connect('listOfTasks.db')
+        self.cursor = self.connection.cursor()
+        self.cursor.execute('create table if not exists tasks (title text)')
 
-def delete_all_tasks():
-    message_box = messagebox.askyesno('Delete All', 'Are you sure?')
-    if message_box:
-        while len(tasks) != 0:
-            tasks.pop()
-        the_cursor.execute('delete from tasks')
-        list_update()
+        # Frames
+        sidebar_frame = Frame(master, bg="#1E1E1E")
+        sidebar_frame.pack(side="left", fill="y")
 
-def clear_list():
-    task_listbox.delete(0, 'end')
+        main_frame = Frame(master, bg="#2E2E2E")
+        main_frame.pack(side="left", fill="both", expand=True)
 
-def close():
-    print(tasks)
-    guiWindow.destroy()
+        # Labels
+        task_label = Label(sidebar_frame, text="Enter the Task:", font=("Arial", 14), bg="#1E1E1E", fg="white")
+        task_label.pack(pady=(30, 10))
 
-def retrieve_database():
-    while len(tasks) != 0:
-        tasks.pop()
-    for row in the_cursor.execute('select title from tasks'):
-        tasks.append(row[0])
+        # Entry Field
+        self.task_field = Entry(sidebar_frame, font=("Arial", 14), width=20, bg="white", fg="black")
+        self.task_field.pack()
 
-if __name__ == "__main__":
-    guiWindow = Tk()
-    guiWindow.title("To-Do List ")
-    guiWindow.geometry("665x400+550+250")
-    guiWindow.resizable(0, 0)
-    guiWindow.configure(bg="#B5E5CF")
+        # Buttons
+        add_button = Button(sidebar_frame, text="Add Task", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.add_task)
+        add_button.pack(pady=10)
+        
+        del_button = Button(sidebar_frame, text="Delete Task", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.delete_task)
+        del_button.pack(pady=10)
 
-    the_connection = sql.connect('listOfTasks.db')
-    the_cursor = the_connection.cursor()
-    the_cursor.execute('create table if not exists tasks (title text)')
+        del_all_button = Button(sidebar_frame, text="Delete All Tasks", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.delete_all_tasks)
+        del_all_button.pack(pady=10)
 
-    tasks = []
+        exit_button = Button(sidebar_frame, text="Exit", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.close)
+        exit_button.pack(pady=10)
 
-    functions_frame = Frame(guiWindow, bg="white")
-    functions_frame.pack(side="top", expand=True, fill="both", padx=10, pady=10)
+        # Listbox
+        self.task_listbox = Listbox(main_frame, width=57, height=20, font="bold", selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white")
+        self.task_listbox.pack(pady=(20, 0))
 
-    task_label = Label(
-        functions_frame,
-        text="Enter the Task:",
-        font=("arial", 14, "bold"),
-        background="black",
-        foreground="white"
-    )
-    task_label.grid(row=0, column=0, pady=(10, 0), padx=10, sticky="w")
+        # Call functions
+        self.retrieve_database()
+        self.list_update()
 
-    task_field = Entry(
-        functions_frame,
-        font=("Arial", 14),
-        width=42,
-        foreground="black",
-        background="white",
-    )
-    task_field.grid(row=0, column=1, pady=(10, 0), padx=10, sticky="w")
+    def add_task(self):
+        task_string = self.task_field.get()
+        if len(task_string) == 0:
+            messagebox.showinfo('Error', 'Field is Empty.')
+        else:
+            self.tasks.append(task_string)
+            self.cursor.execute('insert into tasks values (?)', (task_string,))
+            self.list_update()
+            self.task_field.delete(0, 'end')
 
-    button_style = {"width": 15, "font": ("arial", 14, "bold"), "bg": '#4CAF50', "fg": "white"}
+    def list_update(self):
+        self.clear_list()
+        for task in self.tasks:
+            self.task_listbox.insert('end', task)
 
-    add_button = Button(
-        functions_frame,
-        text="Add Task",
-        command=add_task,
-        **button_style
-    )
-    del_button = Button(
-        functions_frame,
-        text="Delete Task",
-        command=delete_task,
-        **button_style
-    )
-    del_all_button = Button(
-        functions_frame,
-        text="Delete All Tasks",
-        command=delete_all_tasks,
-        **button_style
-    )
-    exit_button = Button(
-        functions_frame,
-        text="Exit",
-        command=close,
-        width=42,
-        font=("arial", 14, "bold"),
-        foreground='white',
-        bg='#D41E0D',
-    )
+    def delete_task(self):
+        try:
+            the_value = self.task_listbox.get(self.task_listbox.curselection())
+            if the_value in self.tasks:
+                self.tasks.remove(the_value)
+                self.list_update()
+                self.cursor.execute('delete from tasks where title = ?', (the_value,))
+        except:
+            messagebox.showinfo('Error', 'No Task Selected. Cannot Delete.')
 
-    add_button.grid(row=1, column=0, pady=(10, 0), padx=10, sticky="w")
-    del_button.grid(row=1, column=1, pady=(10, 0), padx=10, sticky="w")
-    del_all_button.grid(row=1, column=2, pady=(10, 0), padx=10, sticky="w")
-    exit_button.grid(row=2, column=0, columnspan=4, pady=10, padx=10, sticky="w")
+    def delete_all_tasks(self):
+        message_box = messagebox.askyesno('Delete All', 'Are you sure?')
+        if message_box:
+            while len(self.tasks) != 0:
+                self.tasks.pop()
+            self.cursor.execute('delete from tasks')
+            self.list_update()
 
-    task_listbox = Listbox(
-        functions_frame,
-        width=57,
-        height=7,
-        font=("Arial", 12),
-        selectmode='SINGLE',
-        background="WHITE",
-        foreground="BLACK",
-        selectbackground="#4CAF50",
-        selectforeground="WHITE"
-    )
-    task_listbox.grid(row=3, column=0, columnspan=4, pady=10, padx=10, sticky="w")
+    def clear_list(self):
+        self.task_listbox.delete(0, 'end')
 
-    retrieve_database()
-    list_update()
+    def close(self):
+        print(self.tasks)
+        self.master.destroy()
 
-    guiWindow.mainloop()
-    the_connection.commit()
-    the_cursor.close()
+    def retrieve_database(self):
+        while len(self.tasks) != 0:
+            self.tasks.pop()
+        for row in self.cursor.execute('select title from tasks'):
+            self.tasks.append(row[0])
+
+if __name__ == '__main__':
+    root = Tk()
+    app = TodoApp(root)
+    root.mainloop()
+    app.connection.commit()
+    app.cursor.close()
