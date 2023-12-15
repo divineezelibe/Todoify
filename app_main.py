@@ -19,35 +19,37 @@ class TodoApp:
 
         # Frames
         sidebar_frame = Frame(master, bg="#1E1E1E")
-        sidebar_frame.pack(side="left", fill="y")
+        sidebar_frame.pack(side="left", fill="y", padx=(10, 5))
 
         main_frame = Frame(master, bg="#2E2E2E")
         main_frame.pack(side="left", fill="both", expand=True)
 
         # Labels
-        task_label = Label(sidebar_frame, text="Enter the Task:", font=("Arial", 14), bg="#1E1E1E", fg="white")
-        task_label.pack(pady=(30, 10))
+        task_label = Label(sidebar_frame, text="Enter the Task:", font=("Arial", 12), bg="#1E1E1E", fg="white")
+        task_label.pack(pady=(30, 5))
 
         # Entry Field
-        self.task_field = Entry(sidebar_frame, font=("Arial", 14), width=20, bg="white", fg="black")
+        self.task_field = Entry(sidebar_frame, font=("Arial", 12), width=20, bg="white", fg="black")
         self.task_field.pack()
 
         # Buttons
-        add_button = Button(sidebar_frame, text="Add Task", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.add_task)
-        add_button.pack(pady=10)
+        button_style = {"bg": '#D41E0D', "fg": "white", "font": ("Arial", 12, "bold"), "bd": 0, "activebackground": "#C42010", "activeforeground": "white"}
         
-        del_button = Button(sidebar_frame, text="Delete Task", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.delete_task)
-        del_button.pack(pady=10)
+        add_button = Button(sidebar_frame, text="Add Task", width=15, **button_style, command=self.add_task)
+        add_button.pack(pady=5)
+        
+        del_button = Button(sidebar_frame, text="Delete Task", width=15, **button_style, command=self.delete_task)
+        del_button.pack(pady=5)
 
-        del_all_button = Button(sidebar_frame, text="Delete All Tasks", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.delete_all_tasks)
-        del_all_button.pack(pady=10)
+        del_all_button = Button(sidebar_frame, text="Delete All Tasks", width=15, **button_style, command=self.delete_all_tasks)
+        del_all_button.pack(pady=5)
 
-        exit_button = Button(sidebar_frame, text="Exit", width=15, font=("Arial", 14, "bold"), bg='#D41E0D', fg="white", command=self.close)
-        exit_button.pack(pady=10)
+        exit_button = Button(sidebar_frame, text="Exit", width=15, **button_style, command=self.close)
+        exit_button.pack(pady=5)
 
         # Listbox
-        self.task_listbox = Listbox(main_frame, width=57, height=20, font="bold", selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white")
-        self.task_listbox.pack(pady=(20, 0))
+        self.task_listbox = Listbox(main_frame, width=57, height=20, font=("Arial", 12), selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white")
+        self.task_listbox.pack(pady=(20, 0), padx=10)
 
         # Call functions
         self.retrieve_database()
