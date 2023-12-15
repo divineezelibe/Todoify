@@ -115,7 +115,7 @@ if __name__ == "__main__":
     add_button.grid(row=1, column=0, pady=(10, 0), padx=10, sticky="w")
     del_button.grid(row=1, column=1, pady=(10, 0), padx=10, sticky="w")
     del_all_button.grid(row=1, column=2, pady=(10, 0), padx=10, sticky="w")
-    exit_button.grid(row=1, column=3, pady=(10, 0), padx=10, sticky="w")
+    exit_button.grid(row=2, column=0, columnspan=4, pady=10, padx=10, sticky="w")
 
     task_listbox = Listbox(
         functions_frame,
@@ -128,7 +128,7 @@ if __name__ == "__main__":
         selectbackground="#4CAF50",
         selectforeground="WHITE"
     )
-    task_listbox.grid(row=2, column=0, columnspan=4, pady=10, padx=10, sticky="w")
+    task_listbox.grid(row=3, column=0, columnspan=4, pady=10, padx=10, sticky="w")
 
     retrieve_database()
     list_update()
