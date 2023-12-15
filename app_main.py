@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import sqlite3 as sql
 
 class TodoApp:
@@ -26,29 +26,33 @@ class TodoApp:
 
         # Labels
         task_label = Label(sidebar_frame, text="Enter the Task:", font=("Arial", 12), bg="#1E1E1E", fg="white")
-        task_label.pack(pady=(30, 5))
+        task_label.pack(pady=(30, 5), padx=10, anchor='w')
 
         # Entry Field
-        self.task_field = Entry(sidebar_frame, font=("Arial", 12), width=20, bg="white", fg="black")
-        self.task_field.pack()
+        self.task_field = Entry(sidebar_frame, font=("Arial", 12), width=20, bg="white", fg="black", bd=2, relief="groove", insertbackground="black")
+        self.task_field.pack(padx=10)
 
         # Buttons
-        button_style = {"bg": '#D41E0D', "fg": "white", "font": ("Arial", 12, "bold"), "bd": 0, "activebackground": "#C42010", "activeforeground": "white"}
-        
-        add_button = Button(sidebar_frame, text="Add Task", width=15, **button_style, command=self.add_task)
+        button_style = {"style": "W.TButton", "padding": (10, 5), "width": 20, "command": None}
+
+        add_button = ttk.Button(sidebar_frame, text="Add Task", **button_style)
         add_button.pack(pady=5)
-        
-        del_button = Button(sidebar_frame, text="Delete Task", width=15, **button_style, command=self.delete_task)
+        add_button.config(command=self.add_task)
+
+        del_button = ttk.Button(sidebar_frame, text="Delete Task", **button_style)
         del_button.pack(pady=5)
+        del_button.config(command=self.delete_task)
 
-        del_all_button = Button(sidebar_frame, text="Delete All Tasks", width=15, **button_style, command=self.delete_all_tasks)
+        del_all_button = ttk.Button(sidebar_frame, text="Delete All Tasks", **button_style)
         del_all_button.pack(pady=5)
+        del_all_button.config(command=self.delete_all_tasks)
 
-        exit_button = Button(sidebar_frame, text="Exit", width=15, **button_style, command=self.close)
+        exit_button = ttk.Button(sidebar_frame, text="Exit", **button_style)
         exit_button.pack(pady=5)
+        exit_button.config(command=self.close)
 
         # Listbox
-        self.task_listbox = Listbox(main_frame, width=57, height=20, font=("Arial", 12), selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white")
+        self.task_listbox = Listbox(main_frame, width=57, height=20, font=("Arial", 12), selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white", bd=2, relief="groove")
         self.task_listbox.pack(pady=(20, 0), padx=10)
 
         # Call functions
