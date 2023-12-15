@@ -30,7 +30,7 @@ class TodoApp:
 
         # Entry Field
         self.task_field = Entry(sidebar_frame, font=("Arial", 12), width=20, bg="white", fg="black", bd=2, relief="groove", insertbackground="black")
-        self.task_field.pack(padx=10)
+        self.task_field.pack(padx=10, pady=(0, 20))
 
         # Buttons
         button_style = {"style": "W.TButton", "padding": (10, 5), "width": 20, "command": None}
@@ -53,7 +53,7 @@ class TodoApp:
 
         # Listbox
         self.task_listbox = Listbox(main_frame, width=57, height=20, font=("Arial", 12), selectmode='SINGLE', bg="#2E2E2E", fg="white", selectbackground="#D41E0D", selectforeground="white", bd=2, relief="groove")
-        self.task_listbox.pack(pady=(20, 0), padx=10)
+        self.task_listbox.pack(pady=(0, 20), padx=10)
 
         # Call functions
         self.retrieve_database()
