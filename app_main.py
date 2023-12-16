@@ -5,7 +5,7 @@ import sqlite3 as sql
 class TodoApp:
     def __init__(self, master):
         self.master = master
-        self.master.title("To-Do List")
+        self.master.title("TODOIFY (Task Management)")
         self.master.geometry("665x400+550+250")
         self.master.resizable(0, 0)
         self.master.configure(bg="#2E2E2E")
