@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    {% bootstrap_css %}
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Task Manager</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="list-unstyled">
+                    {% for message in messages %}
+                        <li class="alert alert-{{ message.category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('index') }}" class="mb-4">
+            <div class="form-group">
+                <label for="task">Task:</label>
+                <input type="text" id="task" name="task" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="due_date">Due Date:</label>
+                <input type="datetime-local" id="due_date" name="due_date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </form>
+
+        <ul class="list-group">
+            {% for task, due_date in tasks %}
+                <li class="list-group-item">
+                    {{ task }} (Due: {{ due_date }})
+                    <a href="{{ url_for('delete_task', task=task) }}" class="btn btn-danger btn-sm float-right">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <form method="get" action="{{ url_for('delete_all_tasks') }}" class="mt-4">
+            <button type="submit" class="btn btn-danger">Delete All Tasks</button>
+        </form>
+    </div>
+    {% bootstrap_javascript %}
+</body>
+</html>
