@@ -5,16 +5,16 @@ import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = '6ry42r6pa867634puz'
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'your_email@gmail.com'  # Replace with your Gmail address
-app.config['MAIL_PASSWORD'] = 'your_app_password'  # Replace with the generated App Password
-
+app.config['MAIL_USERNAME'] = 'divineezelibe.e@gmail.com'  # Replace with your Gmail address
+app.config['MAIL_PASSWORD'] = 'gryr hcpz pabt cpuz'  # Replace with the generated App Password
+app.config['MAIL_DEFAULT_SENDER'] = 'divineezelibe.e@gmail.com'
 mail = Mail(app)
 Bootstrap(app)
 
@@ -53,8 +53,9 @@ def index():
                 send_time = datetime.now() + timedelta(seconds=delta.total_seconds())
                 send_time_str = send_time.strftime('%Y-%m-%d %H:%M:%S')
 
-                cursor.execute('insert into tasks (title, datetime) values (?, ?)', (task, send_time_str))
-                connection.commit()
+                # Note: Do not insert the task into the database again here
+                # cursor.execute('insert into tasks (title, datetime) values (?, ?)', (task, send_time_str))
+                # connection.commit()
 
                 send_email(subject, body, recipient)
                 flash('Task added and reminder scheduled!', 'success')
