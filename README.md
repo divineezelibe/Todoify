@@ -1,4 +1,4 @@
-[Todoify Logo](./landing/imgs/logo-no-background.png)
+![Todoify Logo](./landing/imgs/logo-no-background.png)
 
 ## Table of Contents
 
