@@ -25,10 +25,10 @@ cursor.execute('create table if not exists tasks (title text, datetime text, ema
 
 def send_email(subject, body, recipient):
     msg = Message(subject, recipients=[recipient])
-    msg.body = body
+    msg.html = body
     mail.send(msg)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/app', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         task = request.form['task']
@@ -50,12 +50,12 @@ def index():
 
             if delta.total_seconds() > 0:
                 subject = 'Task Reminder'
-                body = f"Don't forget to do: {task}"
+                
                 recipient = email
 
                 send_time = datetime.now() + timedelta(seconds=delta.total_seconds())
                 send_time_str = send_time.strftime('%Y-%m-%d %H:%M:%S')
-
+                body = f"<h1>Todoify</h1><p><b>TASK</b> ({send_time_str}): {task}</p>"
                 send_email(subject, body, recipient)
                 flash('Task added and reminder scheduled!', 'success')
             else:
@@ -66,6 +66,10 @@ def index():
     tasks = cursor.fetchall()
 
     return render_template('index.html', tasks=tasks)
+
+@app.route('/', methods=['GET', 'POST'])
+def landing():
+    return render_template('landing.html')
 
 @app.route('/delete/<task>')
 def delete_task(task):

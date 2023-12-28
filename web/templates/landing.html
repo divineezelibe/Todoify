@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todoify</title>
+    <!-- Bootstrap CSS from CDN -->
+    <!-- Poppins Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        .left-column {
+            padding: 40px;
+        }
+
+        .right-column {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+        }
+
+        p {
+            color: #555;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mx-auto my-5">
+    <div class="row mx-auto">
+        <div class="col-md-6 left-column">
+            <img src="{{ url_for('static', filename='imgs/logo-no-background.png') }}" class="img-fluid" style="width: 200px;" alt="App Screen">
+            <h1 class="mt-4">About Todoify</h1>
+            <p>
+                <strong>Todoify</strong> is an advanced task management application designed to enhance your productivity and organization.
+                With a user-friendly interface, Todoify allows you to effortlessly create, manage, and prioritize your tasks, ensuring
+                that nothing important slips through the cracks.
+            </p>
+            <a href="/app" class="cta-button">Get Started</a>
+        </div>
+        <div class="col-md-6 right-column">
+            <img src="{{ url_for('static', filename='imgs/app_screen.jpg') }}" class="img-fluid" alt="App Screen">
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS from CDN -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
