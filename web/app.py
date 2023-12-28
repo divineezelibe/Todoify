@@ -19,9 +19,9 @@ mail = Mail(app)
 Bootstrap(app)
 
 # Connect to the database
-connection = sqlite3.connect('listOfTasks.db', check_same_thread=False)
+connection = sqlite3.connect('allTasks.db', check_same_thread=False)
 cursor = connection.cursor()
-cursor.execute('create table if not exists tasks (title text, datetime text)')
+cursor.execute('create table if not exists tasks (title text, datetime text, email text)')
 
 def send_email(subject, body, recipient):
     msg = Message(subject, recipients=[recipient])
@@ -33,12 +33,15 @@ def index():
     if request.method == 'POST':
         task = request.form['task']
         due_date = request.form['due_date']
+        email = request.form['email']
 
         if not task:
             flash('Task cannot be empty!', 'error')
+        elif not email:
+            flash('Email cannot be empty!', 'error')
         else:
             # Insert task into the database
-            cursor.execute('insert into tasks (title, datetime) values (?, ?)', (task, due_date))
+            cursor.execute('insert into tasks (title, datetime, email) values (?, ?, ?)', (task, due_date, email))
             connection.commit()
 
             # Schedule email notification
@@ -48,14 +51,10 @@ def index():
             if delta.total_seconds() > 0:
                 subject = 'Task Reminder'
                 body = f"Don't forget to do: {task}"
-                recipient = 'your_email@gmail.com'  # Replace with the recipient's email address
+                recipient = email
 
                 send_time = datetime.now() + timedelta(seconds=delta.total_seconds())
                 send_time_str = send_time.strftime('%Y-%m-%d %H:%M:%S')
-
-                # Note: Do not insert the task into the database again here
-                # cursor.execute('insert into tasks (title, datetime) values (?, ?)', (task, send_time_str))
-                # connection.commit()
 
                 send_email(subject, body, recipient)
                 flash('Task added and reminder scheduled!', 'success')
@@ -63,7 +62,7 @@ def index():
                 flash('Invalid due date. Please choose a future date and time.', 'error')
 
     # Fetch tasks from the database
-    cursor.execute('select title, datetime from tasks order by datetime')
+    cursor.execute('select title, datetime, email from tasks order by datetime')
     tasks = cursor.fetchall()
 
     return render_template('index.html', tasks=tasks)
