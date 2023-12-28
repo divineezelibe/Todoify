@@ -30,6 +30,9 @@
 
 ### Installation
 
+#### Download for Windows:
+    https://github.com/divineezelibe/Todoify/blob/main/dist/
+### WEB Version:
 1. Clone the repository:
 
     ```bash
